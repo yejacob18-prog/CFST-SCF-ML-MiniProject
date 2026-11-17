@@ -1,0 +1,75 @@
+\documentclass[10pt,a4paper]{article}
+% Based on the supplied Machine Learning Mini-Project LaTeX template.
+% Compile from this folder: pdflatex SCF_MiniProject_Report.tex
+\usepackage[margin=20mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage[colorlinks=true,urlcolor=blue!55!black,linkcolor=blue!55!black]{hyperref}
+\usepackage{xcolor}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\textfloatsep}{7pt}
+\setlength{\intextsep}{7pt}
+\renewcommand{\refname}{References}
+
+\begin{document}
+\begin{center}
+{\Large\bfseries Machine Learning Prediction of Brace-Saddle Stress Concentration in CFST T-Joints\par}
+\vspace{5pt}
+{\normalsize \textit{[Replace with author name(s)]}\par}
+\vspace{2pt}
+{\small Course: Machine Learning Mini-Project \quad | \quad GitHub: \textit{[Add your repository URL]}\par}
+\end{center}
+\vspace{-6pt}
+
+\section{Problem and Motivation}
+Welded tubular joints can develop a highly non-uniform local stress field when forces pass from the brace to the chord. The stress concentration factor (SCF), defined as hot-spot stress divided by nominal stress, is useful for identifying potentially fatigue-sensitive regions. This project investigates whether basic supervised regression methods can approximate finite-element-analysis (FEA) SCFs at the \emph{brace saddle} of concrete-filled steel tubular (CFST) T-joints under axial compression of the brace. The inputs are three dimensionless geometry parameters $(\beta,\gamma,\tau)$, and the output is one continuous SCF value. A fast approximate prediction could support preliminary parametric screening, but cannot replace engineering verification.
+
+\section{Dataset and Method}
+Data were taken from the author-released CFST joint dataset of Bajracharya \emph{et al.}~\cite{dataset,paper}. We used the workbook sheet \texttt{T-JOINT BS IN COMP}, containing \textbf{140 unique FEA samples} on a complete $4\times5\times7$ grid: $\beta=0.3$--$0.6$, $\gamma=20$--$40$, and $\tau=0.4$--$1.0$. The target was the workbook's \texttt{FEA} column (SCF range 1.60--2.14); the authors' precomputed \texttt{ANN} predictions were excluded to prevent target leakage. There were no missing entries or repeated geometry combinations.
+
+A seeded random \textbf{80/20 split} ($123$) yielded 112 development and 28 untouched test samples. Only the development data entered \textbf{shuffled five-fold cross-validation}. We compared a mean predictor, linear ordinary least squares (OLS), linear stochastic gradient descent (SGD), polynomial OLS, polynomial Ridge ($L_2$ penalty), and polynomial Lasso ($L_1$ penalty). Degree $2$ or $3$, regularization strength, and SGD initial step size were chosen by minimum mean \emph{validation} mean absolute error (MAE). Polynomial expansion and standardization were fitted inside each training fold. After selecting the configuration, the model was refitted on all 112 development observations and evaluated once using held-out MAE, root-mean-square error (RMSE), and $R^2$. Implementation used NumPy and scikit-learn~\cite{sklearn}.
+
+\section{Results and Discussion}
+\begin{table}[ht]
+\centering
+\caption{Five-fold cross-validation on development data only; lower MAE is better.}
+\small
+\begin{tabular}{lrrl}
+\toprule
+Model & Train MAE & Val. MAE & Selected setting\\
+\midrule
+Mean baseline & 0.10615 & 0.10819 & Mean\\
+Linear OLS & 0.03525 & 0.03607 & Degree 1\\
+Linear SGD & 0.03525 & 0.03608 & $\eta_0=0.01$\\
+Polynomial OLS & 0.01160 & \textbf{0.01722} & Degree 3\\
+Polynomial Ridge & 0.01185 & 0.01723 & Degree 3, $\alpha=0.001$\\
+Polynomial Lasso & 0.01545 & 0.01853 & Degree 3, $\alpha=0.0001$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Validation performance improved substantially from linear OLS to third-degree polynomial OLS, indicating that the FE relationship is not well captured by a purely linear feature representation. Ridge was virtually tied with polynomial OLS; the difference in validation MAE ($\approx0.00001$) is too small to claim an important improvement from regularization. The selected \textbf{degree-3 polynomial OLS} achieved a final \textbf{test MAE of 0.01973, RMSE of 0.02755, and $R^2=0.96693$} on 28 untouched cases. The largest observed absolute test error was 0.09047 SCF. The training-versus-validation difference (0.01160 vs 0.01722) suggests some sensitivity to fitted samples, although it is not a formal bias--variance decomposition.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.56\linewidth]{../figures/test_prediction_scatter.png}
+\caption{Independent test predictions against FEA SCFs ($n=28$). The dashed line is ideal agreement; high $R^2$ is \emph{not} classification accuracy.}
+\end{figure}
+
+\section{Conclusions and Reflection}
+The project demonstrates an effective low-cost surrogate for the sampled brace-saddle SCFs and the importance of selecting model complexity with unseen validation folds instead of training error. It also illustrates that more complex regularization does not necessarily outperform a well-chosen polynomial least-squares baseline. The dataset is small, FE-derived, and sampled on a fixed geometry grid; a random holdout mainly measures \emph{interpolation}, not extrapolation or experimental validity. A stronger follow-up would test unseen parameter levels and independent experimentally validated joint geometries.
+
+\section*{Reproducibility and Disclosures}
+The accompanying repository includes the licensed source workbook, clean CSV, training/prediction script, tests, pinned dependency ranges, random seed, exact split indices, all cross-validation scores, final test predictions, figures, and README commands. No pretrained model or original ANN code was used. ChatGPT assisted with experiment planning, independent code drafting, and report drafting; the numeric results were generated by executing the supplied Python program. The submitting authors should review these materials.
+
+\begin{thebibliography}{9}\setlength{\itemsep}{0pt}
+\bibitem{dataset} S. Bajracharya, S. Nakamura, and T. Nishikawa. \emph{Dataset for SCF Prediction in CFST T- and K-Joints Using ANN}. Mendeley Data, V1 (2025). \url{https://doi.org/10.17632/rp7vm5627z.1}.
+\bibitem{paper} S. Bajracharya, S. Nakamura, and T. Nishikawa. \emph{Prediction of stress concentration factors for concrete-filled steel tubular (CFST) T-joints and K-joints using artificial neural network}. Results in Engineering 27, 106313 (2025). \url{https://doi.org/10.1016/j.rineng.2025.106313}.
+\bibitem{sklearn} F. Pedregosa \emph{et al.} Scikit-learn: Machine Learning in Python. \emph{JMLR} 12, 2825--2830 (2011).
+\end{thebibliography}
+\end{document}
