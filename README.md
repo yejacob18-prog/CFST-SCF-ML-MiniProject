@@ -10,11 +10,11 @@ This repository contains an independently implemented, reproducible regression c
 
 Original data: S. Bajracharya, S. Nakamura, T. Nishikawa, **Dataset for SCF Prediction in CFST T- and K-Joints Using ANN**, Mendeley Data (2025), Version 1, [DOI: 10.17632/rp7vm5627z.1](https://doi.org/10.17632/rp7vm5627z.1) (CC BY 4.0). Related peer-reviewed article: *Prediction of stress concentration factors for concrete-filled steel tubular (CFST) T-joints and K-joints using artificial neural network*, *Results in Engineering* 27 (2025), article 106313, [DOI: 10.1016/j.rineng.2025.106313](https://doi.org/10.1016/j.rineng.2025.106313).
 
-- Provided original workbook: `data/source/Compile data of SCF FEM and ANN.xlsx`.
+- Original workbook: `Compile data of SCF FEM and ANN.xlsx`, downloadable from the cited Mendeley Data release. The public repository includes the cleaned CSV; the complete local project ZIP also contains a copy of the original workbook.
 - Exact sheet used: `T-JOINT BS IN COMP`, **140** numerical FE-derived cases.
 - Analysis data: `data/scf_bs_compression.csv`, with 3 input ratios: `beta` (4 levels, 0.3-0.6), `gamma` (5 levels, 20-40), `tau` (7 levels, 0.4-1.0). Target: `SCF_FEA` (range 1.60-2.14).
 - The original sheet also includes authors' `ANN` predictions. Those predictions are **deliberately excluded** from all model inputs, all targets, and the model-selection procedure; otherwise evaluation would be contaminated.
-- 140 unique combinations = 4 × 5 × 7, no missing or nonfinite values. A source-to-CSV, row-for-row audit (0 mismatches) is in `data/DATA_AUDIT.json`. The workbook is included for offline auditing; the training script uses the CSV and does not need Excel.
+- 140 unique combinations = 4 × 5 × 7, no missing or nonfinite values. A source-to-CSV, row-for-row audit (0 mismatches) is in `data/DATA_AUDIT.json`. The original workbook is available at the Mendeley Data DOI for auditing; the training script uses the included CSV and does not need Excel.
 
 The numerical FEA samples are **not new physical tests** and do not establish validated performance on unseen structures or geometries outside the sampled domain.
 
@@ -48,7 +48,7 @@ For exact library versions matching the executed experiment, install `requiremen
 
 ## 4. Results from running the supplied scripts
 
-All metrics below are produced on the fixed split; the saved CSV and JSON are the sources of truth.
+All metrics below are produced on the fixed split; the saved CSV and JSON are the sources of truth. Run `python scf_project.py train` to reproduce or regenerate the output artifacts listed below.
 
 | Model family | Training-fold MAE | Validation-fold MAE | Best setting |
 |:--|--:|--:|:--|
@@ -74,28 +74,28 @@ This generates a numerical prediction from `results/fitted_model.joblib`. Inputs
 ## 6. Generated artifacts
 
 - `results/metrics.json` — final test metrics, selected model, versions and random seed
-- `results/split_indices.json` — exact training and test rows
+- `results/split_indices.json` — generated exact training and test rows
 - `results/cv_model_comparison.csv` — 5-fold training and validation MAEs
-- `results/hyperparameter_search.csv` — all validation candidate scores
-- `results/held_out_predictions.csv` — 28 observed and predicted FE SCFs
-- `results/fitted_model.joblib` — locally trained estimator
-- `figures/cv_model_comparison.png` — training-versus-validation comparison
-- `figures/test_prediction_scatter.png` — held-out FEA versus ML predictions
-- `figures/test_residuals.png` — held-out prediction residuals
-- `report/SCF_MiniProject_Report.tex` and `.pdf` — ≤2 A4 page report in instructor's LaTeX structure
-- `COURSE_METHODS_CHECKLIST.md` — chapter-by-chapter verification of teaching methods
+- `results/hyperparameter_search.csv` — generated all validation candidate scores
+- `results/held_out_predictions.csv` — generated 28 observed and predicted FE SCFs
+- `results/fitted_model.joblib` — generated locally trained estimator (created by `train`)
+- `figures/cv_model_comparison.png` — generated training-versus-validation comparison
+- `figures/test_prediction_scatter.png` — generated held-out FEA versus ML predictions
+- `figures/test_residuals.png` — generated held-out prediction residuals
+- `report/SCF_MiniProject_Report.tex` — LaTeX report source (compile after `train` generates figures); the locally compiled two-page PDF is available in the full project ZIP
+- `COURSE_METHODS_CHECKLIST.md` — chapter-by-chapter verification of teaching methods (included in the full project ZIP)
 - `requirements-lock.txt` and `environment.json` — exact dependency versions tested
 
 ## 7. Reproducibility checks
 
-Run `python scf_project.py train` a second time and compare `results/metrics.json` for numerical consistency; the random seed and folds are fixed. Use `python -m unittest discover -s tests -v` to check expected data properties, no target leakage and the prediction pipeline. The project works from any working directory because paths are relative to the script location.
+Run `python scf_project.py train` a second time and compare `results/metrics.json` for numerical consistency; the random seed and folds are fixed. Use `python -m unittest discover -s tests -v` to check expected data properties, no target leakage and the prediction pipeline. The project works from any working directory because paths are relative to the script location. **For a clean checkout**, first run the training command to generate the model weights, all images, split indices, hyperparameter tables and final predictions. These generated binary artifacts are intentionally not checked into this lightweight repository. The submitted CSV and source scripts are sufficient to reproduce them.
 
 ## 8. Submitting the assignment
 
 1. Review the generated code, results and limitations before submission.
 2. Replace the **author** placeholder in `report/SCF_MiniProject_Report.tex` with the actual submitting author(s). The linked GitHub URL is already included. Recompile using `cd report && pdflatex SCF_MiniProject_Report.tex` (or Overleaf).
 3. Use this public repository URL for submission: https://github.com/yejacob18-prog/CFST-SCF-ML-MiniProject.
-4. Verify the report PDF is at most **2 A4 pages** after the author details are added. Keep dataset attribution and AI disclosures.
+4. Run `python scf_project.py train` to regenerate the report figure, then compile the report and verify the PDF is at most **2 A4 pages** after the author details are added. Keep dataset attribution and AI disclosures.
 
 ## 9. Attribution and AI assistance
 
