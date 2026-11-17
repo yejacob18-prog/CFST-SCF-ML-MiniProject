@@ -1,0 +1,24 @@
+{
+  "dataset_rows": 140,
+  "training_rows": 112,
+  "test_rows": 28,
+  "random_seed": 123,
+  "cv_folds": 5,
+  "selected_model": "Polynomial OLS",
+  "selected_hyperparameters": {
+    "polynomial__degree": 3
+  },
+  "selected_cv_validation_mae": 0.017216558765830507,
+  "selected_cv_training_mae": 0.011599166253632958,
+  "training_MAE_final_refit": 0.01231850670741606,
+  "test": {
+    "MAE": 0.019732053805233518,
+    "RMSE": 0.027554627667450704,
+    "R2": 0.9669257076155041
+  },
+  "max_test_absolute_error": 0.09047473943418738,
+  "max_error_source_CSV_row": 135,
+  "python": "3.13.5",
+  "numpy": "2.3.5",
+  "scikit_learn": "1.8.0"
+}

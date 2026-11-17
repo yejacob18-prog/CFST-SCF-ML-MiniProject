@@ -1,0 +1,18 @@
+{
+  "source_workbook": "Compile data of SCF FEM and ANN.xlsx",
+  "source_worksheet": "T-JOINT BS IN COMP",
+  "column_mappings": {
+    "β": "beta",
+    "γ": "gamma",
+    "τ": "tau",
+    "FEA": "SCF_FEA"
+  },
+  "excluded_column": "ANN (published model predictions)",
+  "original_data_rows": 140,
+  "parsed_csv_rows": 140,
+  "mismatched_rows": 0,
+  "dataset_sha256": "12e76afe88560beffd2ed8fdad0ac29a2349f1dbcf8dd17a74a3013b74ab5d29",
+  "original_workbook_sha256": "ba5e700df0f710f1473ac20edaa03d5d3ff652341a33c80127c32413cd0f6e23",
+  "license": "CC BY 4.0",
+  "source_doi": "10.17632/rp7vm5627z.1"
+}
