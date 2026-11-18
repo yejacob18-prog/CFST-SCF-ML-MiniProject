@@ -20,7 +20,7 @@ The numerical FEA samples are **not new physical tests** and do not establish va
 
 ## 2. Setup
 
-Install Python 3.10+ (results were generated using Python 3.13.5, NumPy 2.3.5, scikit-learn 1.8.0) and run, from the project directory:
+Install Python 3.11+ (results were generated using Python 3.13.5, NumPy 2.3.5, scikit-learn 1.8.0; the pinned dependencies in `requirements-lock.txt` require Python 3.11 or later) and run, from the project directory:
 
 ```bash
 python -m pip install -r requirements.txt
@@ -82,7 +82,7 @@ This generates a numerical prediction from `results/fitted_model.joblib`. Inputs
 - `figures/cv_model_comparison.png` — generated training-versus-validation comparison
 - `figures/test_prediction_scatter.png` — generated held-out FEA versus ML predictions
 - `figures/test_residuals.png` — generated held-out prediction residuals
-- `report/SCF_MiniProject_Report.tex` — LaTeX report source (compile after `train` generates figures); the locally compiled two-page PDF is available in the full project ZIP
+- `report/SCF_MiniProject_Report.tex` — LaTeX report source (compile after `train` generates figures); the locally compiled two-page PDF is included in the complete project ZIP
 - `COURSE_METHODS_CHECKLIST.md` — chapter-by-chapter verification of teaching methods (included in the full project ZIP)
 - `requirements-lock.txt` and `environment.json` — exact dependency versions tested
 
@@ -93,7 +93,7 @@ Run `python scf_project.py train` a second time and compare `results/metrics.jso
 ## 8. Submitting the assignment
 
 1. Review the generated code, results and limitations before submission.
-2. Replace the **author** placeholder in `report/SCF_MiniProject_Report.tex` with the actual submitting author(s). The linked GitHub URL is already included. Recompile using `cd report && pdflatex SCF_MiniProject_Report.tex` (or Overleaf).
+2. Check the author line in `report/SCF_MiniProject_Report.tex` and replace it if the submitting author(s) differ. The GitHub URL is already included. Recompile using `cd report && pdflatex SCF_MiniProject_Report.tex` (or Overleaf).
 3. Use this public repository URL for submission: https://github.com/yejacob18-prog/CFST-SCF-ML-MiniProject.
 4. Run `python scf_project.py train` to regenerate the report figure, then compile the report and verify the PDF is at most **2 A4 pages** after the author details are added. Keep dataset attribution and AI disclosures.
 
