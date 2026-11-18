@@ -12,7 +12,7 @@
 \usepackage[colorlinks=true,urlcolor=blue!55!black,linkcolor=blue!55!black]{hyperref}
 \usepackage{xcolor}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{4pt}
+\setlength{\parskip}{3pt}
 \setlength{\textfloatsep}{7pt}
 \setlength{\intextsep}{7pt}
 \renewcommand{\refname}{References}
@@ -59,22 +59,22 @@ The linear models were already much better than predicting the average SCF, but 
 \clearpage
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.52\linewidth]{../figures/test_prediction_scatter.png}
+\includegraphics[width=0.46\linewidth]{../figures/test_prediction_scatter.png}
 \caption{Predicted versus FEA SCF for the 28 held-out cases. The dashed line shows perfect agreement.}
 \label{fig:test}
 \end{figure}
 
 \section{Conclusions and Reflection}
-The main lesson for me was that choosing the right model complexity mattered more than using a more complicated training method. Linear OLS is fast and easy to understand, but it could not represent the nonlinear relationship well. SGD gave almost the same result as linear OLS, so iterative optimization offered little benefit for this small dataset. The third-degree polynomial model was more flexible and gave much better predictions, although adding terms also makes overfitting more likely. Ridge and Lasso can reduce that risk by shrinking coefficients, but they need extra parameter tuning; in this experiment, neither clearly improved on polynomial OLS.
+Choosing the right model complexity is more important than using a more complicated training method. Linear regression using ordinary least squares (OLS) is fast and easy to understand, but it cannot represent nonlinear relationships well. In this project, stochastic gradient descent (SGD) gave almost the same results as linear OLS, suggesting that iterative optimization offered little additional benefit for this small dataset. The cubic polynomial regression model was more flexible and provided much better predictions. However, adding more polynomial terms also increases the risk of overfitting. Ridge regression and Lasso regression can reduce this risk by shrinking the regression coefficients through regularization, but they require additional hyperparameter tuning. In this experiment, neither method showed a clear improvement over polynomial regression using OLS.
 
-I think the final model is useful as a quick estimate \emph{within the sampled geometry range}, but I would not rely on it for a new joint design yet. All 140 values came from FEA on a fixed parameter grid, and the test set contained only 28 randomly held-out combinations. It tells us little about geometries outside this grid or real experimental measurements. One simple improvement would be to run a few additional FEA cases at geometric ratios not used for training, and then see how far the predictions differ. That would give a more realistic idea of where the model can be trusted.
+In this project, the final model can be used for quick estimations within the existing range of geometric parameters, but it is not yet sufficiently validated for use in new joint designs. This is mainly because the available data is limited. All 140 data points were obtained from finite element analysis (FEA) using a predefined grid of geometric parameter combinations, and the test set contained only 28 randomly held-out combinations. Therefore, the predictive accuracy of the current model for new geometries outside the existing parameter grid remains uncertain, and the model has not been validated against experimental measurements. One possible improvement would be to generate more geometric configurations with new combinations of geometric parameters and perform additional FEA simulations. If possible, experimental testing of joint specimens could also be conducted to obtain actual measurement data. The FEA results, model predictions, and experimental measurements could then be compared to identify the differences between them. This would provide a more realistic evaluation of the model's predictive accuracy and generalization ability, helping us better understand under which conditions the model can be considered reliable.
 
 \section*{Reproducibility and Disclosures}
-The linked GitHub repository provides the cleaned CSV, training and prediction scripts, model settings, evaluation results and README instructions. The original workbook is available from the cited Mendeley Data record. No pretrained model or original ANN code was reused. ChatGPT assisted with planning, Python code and wording of this report; the numerical results were obtained by running the project code and should be checked by the submitting author.
+The linked GitHub repository provides the cleaned CSV, training and prediction scripts, model settings, evaluation results and README instructions. The original workbook is available from the cited Mendeley Data record. No pretrained model or original ANN code was reused. ChatGPT assisted with Python code, and the numerical results were obtained by running the project code and could be checked.
 
-\begin{thebibliography}{9}\setlength{\itemsep}{0pt}
+\begingroup\small\begin{thebibliography}{9}\setlength{\itemsep}{0pt}
 \bibitem{dataset} S. Bajracharya, S. Nakamura, and T. Nishikawa. \emph{Dataset for SCF Prediction in CFST T- and K-Joints Using ANN}. Mendeley Data, V1 (2025). \url{https://doi.org/10.17632/rp7vm5627z.1}.
 \bibitem{paper} S. Bajracharya, S. Nakamura, and T. Nishikawa. \emph{Prediction of stress concentration factors for concrete-filled steel tubular (CFST) T-joints and K-joints using artificial neural network}. Results in Engineering 27, 106313 (2025). \url{https://doi.org/10.1016/j.rineng.2025.106313}.
 \bibitem{sklearn} F. Pedregosa \emph{et al.} Scikit-learn: Machine Learning in Python. \emph{JMLR} 12, 2825--2830 (2011).
-\end{thebibliography}
+\end{thebibliography}\endgroup
 \end{document}
